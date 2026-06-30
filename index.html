@@ -1906,7 +1906,7 @@
   (function() {
     const PAIRS = ['EUR/USD','USD/JPY','USD/CHF','EUR/GBP','GBP/USD','AUD/USD','AUD/CHF','EUR/JPY'];
     const GOLD='#c9a84c', GOLD_L='#f0d080', GREEN='#26a69a', RED='#ef5350', BG='#060710';
-    const COLS=4, ROWS=2, GAP=2, CDW=6, CDG=2, CDF=3;
+    const COLS=4, ROWS=2, GAP=2, CDW=2, CDG=1, CDF=3;
 
     const canvas = document.getElementById('tradeCanvas');
     if (!canvas) return;
@@ -1939,7 +1939,7 @@
       c.direction=c.rng()>0.5?1:-1; c.currentOpen=c.priceY; c.candleF=0;
       const st=Math.floor(c.rng()*4);
       if(st===1){c.phase='against';c.phaseF=30;}
-      else if(st===2){c.phase='against';c.phaseF=70;for(let i=0;i<2;i++)c.entries.push({y:c.priceY-i*18,type:c.direction>0?'buy':'sell',alpha:1,x:CW-42-i*8});}
+      else if(st===2){c.phase='against';c.phaseF=70;for(let i=0;i<2;i++)c.entries.push({y:c.priceY-i*8,type:c.direction>0?'buy':'sell',alpha:1,x:CW-42-i*5});}
       else if(st===3){c.phase='reverse';c.phaseF=5;}
     }
 
@@ -1955,14 +1955,14 @@
       const r=c.rng;
       // 乱高下: large volatility swings
       let dy=0;
-      if(c.phase==='build')      dy = -c.direction*(r()*4+1.5) + (r()-0.5)*5;
-      else if(c.phase==='against') dy = c.direction*(r()*5+2) + (r()-0.5)*4;
-      else if(c.phase==='reverse') dy = -c.direction*(r()*14+10);
-      else dy = (r()-0.5)*4;
+      if(c.phase==='build')      dy = -c.direction*(r()*1.2+0.4) + (r()-0.5)*1.5;
+      else if(c.phase==='against') dy = c.direction*(r()*1.5+0.6) + (r()-0.5)*1.2;
+      else if(c.phase==='reverse') dy = -c.direction*(r()*5+3.5);
+      else dy = (r()-0.5)*1.5;
       c.priceY = Math.max(CH*0.06, Math.min(CH*0.94, c.priceY+dy));
 
       if(c.candleF>=CDF){
-        c.candles.push({o:c.currentOpen,cc:c.priceY,h:Math.min(c.currentOpen,c.priceY)-r()*4,l:Math.max(c.currentOpen,c.priceY)+r()*4});
+        c.candles.push({o:c.currentOpen,cc:c.priceY,h:Math.min(c.currentOpen,c.priceY)-r()*1.5,l:Math.max(c.currentOpen,c.priceY)+r()*1.5});
         c.currentOpen=c.priceY; c.candleF=0;
       }
       const ex=CW-42;
@@ -1971,7 +1971,7 @@
         if(c.phaseF>50){c.phase='against';c.phaseF=0;}
       } else if(c.phase==='against'){
         if(c.phaseF%20===0&&c.entries.length<4){
-          c.entries.push({y:c.priceY,type:c.direction>0?'buy':'sell',alpha:0,x:ex-c.entries.length*8});
+          c.entries.push({y:c.priceY,type:c.direction>0?'buy':'sell',alpha:0,x:ex-c.entries.length*5});
           burst(c,ex,c.priceY,5,GOLD);
         }
         if(c.entries.length>=4||c.phaseF>95){c.phase='reverse';c.phaseF=0;}
